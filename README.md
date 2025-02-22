@@ -8,8 +8,8 @@ A simple Python script that converts a BMP image (should be in 8-bit indexed col
     <a href="https://www.python.org/"><img height="28" width="28" src="https://cameronos.github.io/img/icon/python.png" /></a>
 </p>
 
-###Screenshots
-<img src width=20% src="https://placehold.co/600x400.png">
+## Screenshots
+<img src width=20% src="[https://placehold.co/600x400.png](https://cameronos.github.io/img/audiosetup.jpg)">
 
 ## Features
 - Automatically processes `.bmp` files and converts 8-bit indexed BMP images into a C array.
