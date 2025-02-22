@@ -15,7 +15,6 @@ Script takes a filename from user, processes the pixel data, and generates a C h
 
 ##Inspiration
 Heavily inspired from https://notisrac.github.io/FileToCArray/, but wanted to make a more technical feel... so here we are...
-## Prerequisites
 
 ##Usage
 To use the script, you need:
@@ -27,3 +26,5 @@ To install Pillow, you can use pip:
 ```bash
 pip install pillow
 ```
+
+Then, just run icon.py in a terminal and provide it with the file!
