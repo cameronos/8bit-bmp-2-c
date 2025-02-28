@@ -1,10 +1,13 @@
 import argparse
-from PIL import Image
-import numpy as np
 import os
+import numpy as np
+from PIL import Image
+from colorama import Fore, Style, init
+
+# Initialize colorama
+init(autoreset=True)
 
 def convertPixelTo8bitRgb(pixel):
-    # convert rgb pixel to 8-bit format (3r-3g-2b)
     r, g, b = pixel[:3]
     newR = (r * 8 // 256)
     newG = (g * 8 // 256)
@@ -13,24 +16,22 @@ def convertPixelTo8bitRgb(pixel):
 
 def imageToCArray(imagePath, arrayName="image_data", resizeWidth=None, resizeHeight=None):
     try:
-        # open and read the image
+        if not os.path.exists(imagePath):
+            print(f"{Fore.RED}Error: File '{imagePath}' not found!{Style.RESET_ALL}")
+            return None
+        
         img = Image.open(imagePath)
         
-        # resize if dimensions provided
         if resizeWidth and resizeHeight:
             img = img.resize((resizeWidth, resizeHeight), Image.Resampling.LANCZOS)
         
-        # get image dimensions
         width, height = img.size
         
-        # convert image to RGB mode if it's not already
         if img.mode != "RGB":
             img = img.convert("RGB")
         
-        # get pixel data
         pixels = np.array(img)
         
-        # create the c array header with image dimensions
         cCode = [
             f"// © Orange Computers 2024",
             f"// image dimensions: {width}x{height}",
@@ -51,18 +52,19 @@ def imageToCArray(imagePath, arrayName="image_data", resizeWidth=None, resizeHei
                 if bytesPerLine % 16 == 0 and not (y == height-1 and x == width-1):
                     cCode.append("    " + ", ".join(lineValues) + ",")
                     lineValues = []
-            
-            if lineValues:
-                if y == height-1:
-                    cCode.append("    " + ", ".join(lineValues))
-                else:
-                    cCode.append("    " + ", ".join(lineValues) + ",")
+                
+        if lineValues:
+            if y == height-1:
+                cCode.append("    " + ", ".join(lineValues))
+            else:
+                cCode.append("    " + ", ".join(lineValues) + ",")
         
         cCode.append("};")
         return "\n".join(cCode)
     
     except Exception as e:
-        return f"Error converting image: {str(e)}"
+        print(f"{Fore.RED}Error processing image: {str(e)}{Style.RESET_ALL}")
+        return None
 
 def saveCFile(cCode, outputPath):
     try:
@@ -70,7 +72,7 @@ def saveCFile(cCode, outputPath):
             f.write(cCode)
         return True
     except Exception as e:
-        print(f"Error saving file: {str(e)}")
+        print(f"{Fore.RED}Error saving file: {str(e)}{Style.RESET_ALL}")
         return False
 
 def main():
@@ -83,18 +85,23 @@ def main():
     
     args = parser.parse_args()
     
+    if not os.path.exists(args.input_file):
+        print(f"{Fore.RED}Error: Input file '{args.input_file}' does not exist.{Style.RESET_ALL}")
+        return
+    
     if not args.output:
         baseName = os.path.splitext(args.input_file)[0]
         args.output = f"{baseName}.c"
     
     cCode = imageToCArray(args.input_file, args.name, args.width, args.height)
     
-    if saveCFile(cCode, args.output):
-        print(f"Successfully converted {args.input_file} to {args.output}")
-        if args.width and args.height:
-            print(f"Image resized to {args.width}x{args.height}")
-    else:
-        print(f"Failed to save output to {args.output}")
+    if cCode:
+        if saveCFile(cCode, args.output):
+            print(f"{Fore.GREEN}Successfully converted {Fore.CYAN}{args.input_file} {Fore.GREEN}to {Fore.CYAN}{args.output}{Style.RESET_ALL}")
+            if args.width and args.height:
+                print(f"{Fore.YELLOW}Image resized to {args.width}x{args.height}{Style.RESET_ALL}")
+        else:
+            print(f"{Fore.RED}Failed to save output to {Fore.CYAN}{args.output}{Style.RESET_ALL}")
 
 if __name__ == "__main__":
     main()
