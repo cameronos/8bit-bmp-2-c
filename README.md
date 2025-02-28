@@ -22,8 +22,10 @@ Heavily inspired by [FileToCArray](https://notisrac.github.io/FileToCArray/), bu
 To use the script, you need:
 - Python 3.x
 - Pillow library for image processing
+- Colorama for terminal colors
 
-To install Pillow, you can use pip:
+To install dependencies, you can use pip:
 
 ```bash
 pip install pillow
+pip install colorama
