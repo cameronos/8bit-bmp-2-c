@@ -5,7 +5,7 @@ A simple Python script that converts a BMP image (should be in 8-bit indexed col
 
 ### Languages and styles used
 <p>
-    <a href="https://www.python.org/"><img height="28" width="28" src="https://cameronos.github.io/img/icon/python.png" /></a>
+    <a href="https://www.python.org/"><img height="28" width="28" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Python.svg/2048px-Python.svg.png" /></a>
 </p>
 
 ## Screenshots
